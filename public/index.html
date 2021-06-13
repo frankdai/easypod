@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EasyPod PWA</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-analytics.js"></script>
+  
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" /> 
+  <script type="module" crossorigin src="/assets/index.70b6013e.js"></script>
+  <link rel="modulepreload" href="/assets/vendor.662227cf.js">
+</head>
+  <body>
+    <div id="root"></div>
+    
+    <script>
+      (function () {
+        var firebaseConfig = {
+          apiKey: "AIzaSyB6to2uavyzIcxlgqI3Inuq2qyo9H_Sz4s",
+          authDomain: "easypod-dbd94.firebaseapp.com",
+          projectId: "easypod-dbd94",
+          storageBucket: "easypod-dbd94.appspot.com",
+          messagingSenderId: "641671870314",
+          appId: "1:641671870314:web:ab71aa514c584a52b9d713",
+          measurementId: "G-0EFLJQZT2X",
+          databaseURL: "https://easypod-dbd94-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      })()
+    </script>
+  </body>
+</html>
