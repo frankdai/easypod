@@ -5,7 +5,7 @@
   "emulators": {
     "database": {
       "host": "localhost",
-      "port": "9001"
+      "port": "9002"
     }
   },
   "hosting": {

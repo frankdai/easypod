@@ -2,17 +2,26 @@ import React, { useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom';
 export default function ({setCurrentUser}) {
   const history = useHistory()
-  const onLogin = useCallback(setCurrentUser, [setCurrentUser])
   useEffect(()=>{
     if (firebase.auth().currentUser) {
       history.push('dashboard', '')
     } else {
       firebase.auth().onAuthStateChanged((user)=>{
         if (user) {
-          let {pictureUrl, displayName, email} = user
-          onLogin({pictureUrl, displayName, email})
-          sessionStorage.setItem('uid', user.uid)
-          history.push('dashboard', '')
+          let databaseRef = firebase.database().ref(`/users/${user.uid}`)
+          databaseRef.get().catch((error)=>{
+            let {pictureUrl, displayName, email} = user
+            firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`).set({
+              pictureUrl,
+              displayName,
+              email
+            })
+          }).finally(()=>{
+            let {pictureUrl, displayName, email} = user
+            sessionStorage.setItem('uid', user.uid)
+            setCurrentUser({pictureUrl, displayName, email})
+            history.push('dashboard', '')
+          })
         }
       });
       let ui = new firebaseui.auth.AuthUI(firebase.auth());

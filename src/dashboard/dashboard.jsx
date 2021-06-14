@@ -15,6 +15,14 @@ export default function () {
       setAllChannels(snapshot.val())
     })
   }, [])
+  useEffect(()=>{
+    if (currentUser) {
+      let {channels} = currentUser
+      //firebase.functions().useEmulator('localhost', '5001')
+      var refresh = firebase.functions().httpsCallable('refresh');
+      refresh({channels}).then((result) => {console.log(result)});
+    }
+  }, [currentUser])
   let userChannels = useMemo(()=>{
     let array = []
     if (currentUser && currentUser.channels && allChannels) {
@@ -24,6 +32,14 @@ export default function () {
       return allChannels[id]
     })
   }, [currentUser, allChannels])
+  function addPodcastToUsr (key) {
+    if (!currentUser.channels || currentUser.channels.indexOf(key) === -1) {
+      firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`).set({
+        ...currentUser,
+        channels: [...currentUser.channels || [], key]
+      })
+    }
+  }
   function addUrl () {
     let url = window.prompt("Add URL")
     let key = ''
@@ -33,25 +49,25 @@ export default function () {
       }
     })
     if (!key) {
-      let updates = {};
-      key = firebase.database().ref().child('channels').push().key;
-      updates['/channels/' + key] = {
-        url: url
-      }
-      firebase.database().ref().update(updates);
-    }
-    if (!currentUser.channels || currentUser.channels.indexOf(key) === -1) {
-      firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`).set({
-        ...currentUser,
-        channels: [...currentUser.channels || [], key]
+      //firebase.functions().useEmulator('localhost', '5001')
+      const add = firebase.functions().httpsCallable('add');
+      add({url}).then(result=>{
+        let id = Object.keys(result)[0]
+        addPodcastToUsr(id)
       })
+    } else {
+      addPodcastToUsr(key)
     }
   }
   return <div>
     {currentUser?currentUser.displayName:'loading'}
     <button onClick={addUrl}>Add a new podcast</button>
     {userChannels.map(channel=>{
-      return (<a href={channel.url} key={channel.url}>{channel.name}</a>)
+      let {meta} = channel
+      return <div>
+        <img src={meta.imageURL} width={300} />
+        <div>{meta.title}</div>
+      </div>
     })}
   </div>
 }
