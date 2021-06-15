@@ -36,9 +36,9 @@ exports.refresh = functions.https.onRequest((request, response)=>{
             }).then(()=>{
               if (results.length === channels.length) {
                 response.setHeader("Content-Type", "application/json");
-                response.status(200).send(JSON.stringify({
-                  channels: results,
-                }));
+                const res = {data: null};
+                res.data[key] = podcast;
+                response.status(200).send(res);
               }
             });
           }).catch((error)=>{
@@ -54,7 +54,6 @@ exports.add = functions.https.onRequest((request, response)=>{
   handleCorsResponse(request, response, ()=>{
     const ref = admin.database().ref("channels");
     const childRef = ref.push();
-    console.log(request.body.data)
     const url = request.body.data.url;
     podcastFeedParser.getPodcastFromURL(url).then((podcast)=>{
       functions.logger.log("parsePodcast", podcast.title);
@@ -65,7 +64,7 @@ exports.add = functions.https.onRequest((request, response)=>{
         const result = {};
         result[childRef.key] = podcast;
         response.setHeader("Content-Type", "application/json");
-        response.status(200).send(JSON.stringify(result));
+        response.status(200).send({data: result});
       });
     }).catch(()=>{
       response.status(400).send("bad");
