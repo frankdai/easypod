@@ -36,10 +36,12 @@ exports.refresh = functions.https.onRequest((request, response)=>{
             }).then(()=>{
               if (results.length === channels.length) {
                 response.setHeader("Content-Type", "application/json");
-                const res = {data: null};
+                const res = {data: {}};
                 res.data[key] = podcast;
                 response.status(200).send(res);
               }
+            }).catch((error)=>{
+              response.status(400).send(JSON.stringify(error));
             });
           }).catch((error)=>{
             response.status(404).send(JSON.stringify(error));

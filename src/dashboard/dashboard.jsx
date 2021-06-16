@@ -16,11 +16,10 @@ export default function () {
     })
   }, [])
   useEffect(()=>{
-    if (currentUser) {
-      let {channels} = currentUser
+    if (currentUser && currentUser.channels) {
       //firebase.functions().useEmulator('localhost', '5001')
       var refresh = firebase.functions().httpsCallable('refresh');
-      refresh({channels}).then((result) => {console.log(result)});
+      refresh({channels: currentUser.channels})
     }
   }, [currentUser])
   let userChannels = useMemo(()=>{
@@ -52,7 +51,7 @@ export default function () {
       //firebase.functions().useEmulator('localhost', '5001')
       const add = firebase.functions().httpsCallable('add');
       add({url}).then(result=>{
-        let id = Object.keys(result)[0]
+        let id = Object.keys(result.data)[0]
         addPodcastToUsr(id)
       })
     } else {
@@ -62,10 +61,10 @@ export default function () {
   return <div>
     {currentUser?currentUser.displayName:'loading'}
     <button onClick={addUrl}>Add a new podcast</button>
-    {userChannels.map(channel=>{
+    {userChannels.map((channel, index)=>{
       let {meta} = channel
-      return <div>
-        <img src={meta.imageURL} width={300} />
+      return <div key={index}>
+        <img src={meta.imageURL} width={300} alt={meta.title}/>
         <div>{meta.title}</div>
       </div>
     })}
