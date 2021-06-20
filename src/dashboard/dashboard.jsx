@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
+import Header from "./header";
 
 export default function () {
   let [currentUser, setCurrentUser] = useState(null)
@@ -59,13 +60,16 @@ export default function () {
     }
   }
   return <div>
-    {currentUser?currentUser.displayName:'loading'}
-    <button onClick={addUrl}>Add a new podcast</button>
+    <Header user={currentUser} addUrl={addUrl} />
     {userChannels.map((channel, index)=>{
-      let {meta} = channel
+      let {meta, episodes} = channel
+      let episode = episodes[0] || {}
       return <div key={index}>
         <img src={meta.imageURL} width={300} alt={meta.title}/>
         <div>{meta.title}</div>
+        <div>{episode.title}</div>
+        <p dangerouslySetInnerHTML={{__html: episode.description}} />
+        <audio src={episode.enclosure.url} controls></audio>
       </div>
     })}
   </div>

@@ -3,6 +3,9 @@ import { BrowserRouter, Switch } from 'react-router-dom';
 import { GuardProvider, GuardedRoute } from 'react-router-guards';
 import DashBoard from './dashboard/dashboard'
 import Login from './login/login'
+import './theme/index.css'
+import './theme/common/button.css'
+import './theme/icomoon/style.css'
 import {DatabaseContext, fireBaseDataBase} from './database/databaseProvide'
 
 export default  () => {
