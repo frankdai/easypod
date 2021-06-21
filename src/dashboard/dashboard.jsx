@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Header from "./header";
 
-export default function () {
-  let [currentUser, setCurrentUser] = useState(null)
+export default function ({user}) {
+  let [currentUserChannels, setCurrentUserChannels] = useState([])
   let [allChannels, setAllChannels] = useState(null)
   useEffect(()=>{
     let database = firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`);
@@ -10,34 +10,31 @@ export default function () {
       console.error(error)
     })
     database.on('value', (snapshot) => {
-      setCurrentUser(snapshot.val());
+      setCurrentUserChannels(snapshot.val().channels || []);
     });
     firebase.database().ref(`/channels`).on('value', (snapshot)=>{
       setAllChannels(snapshot.val())
     })
   }, [])
   useEffect(()=>{
-    if (currentUser && currentUser.channels) {
+    if (currentUserChannels.length) {
       //firebase.functions().useEmulator('localhost', '5001')
       var refresh = firebase.functions().httpsCallable('refresh');
-      refresh({channels: currentUser.channels})
+      refresh({channels: currentUserChannels})
     }
-  }, [currentUser])
+  }, [currentUserChannels])
   let userChannels = useMemo(()=>{
     let array = []
-    if (currentUser && currentUser.channels && allChannels) {
-      array = currentUser.channels
+    if (currentUserChannels.length && allChannels) {
+      array = currentUserChannels
     }
     return array.map((id)=>{
       return allChannels[id]
     })
-  }, [currentUser, allChannels])
+  }, [currentUserChannels, allChannels])
   function addPodcastToUsr (key) {
-    if (!currentUser.channels || currentUser.channels.indexOf(key) === -1) {
-      firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`).set({
-        ...currentUser,
-        channels: [...currentUser.channels || [], key]
-      })
+    if (!currentUserChannels.length || currentUserChannels.indexOf(key) === -1) {
+      firebase.database().ref(`/users/${sessionStorage.getItem('uid')}/channels`).set([...currentUserChannels, key])
     }
   }
   function addUrl () {
@@ -60,7 +57,7 @@ export default function () {
     }
   }
   return <div>
-    <Header user={currentUser} addUrl={addUrl} />
+    <Header user={user} addUrl={addUrl} />
     {userChannels.map((channel, index)=>{
       let {meta, episodes} = channel
       let episode = episodes[0] || {}

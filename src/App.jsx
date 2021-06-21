@@ -6,7 +6,6 @@ import Login from './login/login'
 import './theme/index.css'
 import './theme/common/button.css'
 import './theme/icomoon/style.css'
-import {DatabaseContext, fireBaseDataBase} from './database/databaseProvide'
 
 export default  () => {
   let [currentUser, setCurrentUser] = useState('Frank')
@@ -20,14 +19,13 @@ export default  () => {
       next();
     }
   };
+  let CurrentUserContext = React.createContext(currentUser)
   return (
     <BrowserRouter>
       <GuardProvider guards={[requireLogin]}>
         <Switch>
-          <DatabaseContext.Provider value={fireBaseDataBase}>
-            <GuardedRoute path="/login" exact component={()=>Login({setCurrentUser})} meta={{ auth: false }}/>
-            <GuardedRoute path="/dashboard" exact component={DashBoard} meta={{ auth: true }} />
-          </DatabaseContext.Provider>
+          <GuardedRoute path="/login" exact component={()=>Login({setCurrentUser})} meta={{ auth: false }}/>
+          <GuardedRoute path="/dashboard" exact component={()=>DashBoard({user:currentUser})} meta={{ auth: true }} />
         </Switch>
       </GuardProvider>
     </BrowserRouter>
