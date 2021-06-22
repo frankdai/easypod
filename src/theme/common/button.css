@@ -1,5 +1,8 @@
 .btn {
-  @apply text-center shadow-sm font-semibold px-4 py-2 leading-6;
+  @apply text-center shadow-sm font-semibold px-4 py-2 leading-6 outline-none;
+}
+.btn-sm {
+  @apply px-2 py-1 text-base
 }
 .btn-primary {
   @apply bg-purple-700 text-white
@@ -10,9 +13,17 @@
 }
 
 .btn-hollow {
-  @apply text-purple-700 border-purple-700
+  @apply text-purple-700 border-purple-700 border
 }
 
 .btn-hollow-hover {
   @apply text-purple-800 border-purple-800
+}
+
+.btn-round {
+  @apply px-2 py-2 rounded-full
+}
+
+a[href] {
+  @apply text-purple-600 underline
 }

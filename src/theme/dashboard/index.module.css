@@ -1,0 +1,16 @@
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.left {
+  max-width: min(300px, 25vw);
+  min-width: min(300px, 25vw);
+  flex-basis: 100%;
+}
+
+.time {
+  min-width: 6rem;
+}

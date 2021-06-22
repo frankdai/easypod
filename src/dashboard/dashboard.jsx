@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Header from "./header";
+import DashboardItem from "./item";
 
 export default function ({user}) {
   let [currentUserChannels, setCurrentUserChannels] = useState([])
@@ -59,15 +60,7 @@ export default function ({user}) {
   return <div>
     <Header user={user} addUrl={addUrl} />
     {userChannels.map((channel, index)=>{
-      let {meta, episodes} = channel
-      let episode = episodes[0] || {}
-      return <div key={index}>
-        <img src={meta.imageURL} width={300} alt={meta.title}/>
-        <div>{meta.title}</div>
-        <div>{episode.title}</div>
-        <p dangerouslySetInnerHTML={{__html: episode.description}} />
-        <audio src={episode.enclosure.url} controls></audio>
-      </div>
+      return <DashboardItem channel={channel} key={index} user={user}/>
     })}
   </div>
 }
