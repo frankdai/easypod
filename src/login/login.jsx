@@ -10,12 +10,13 @@ export default function ({setCurrentUser}) {
         if (user) {
           let databaseRef = firebase.database().ref(`/users/${user.uid}`)
           databaseRef.get().catch((error)=>{
-            let {photoURL, displayName, email} = user
+            console.error(error)
+            /*let {photoURL, displayName, email} = user
             firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`).set({
               photoURL,
               displayName,
               email
-            })
+            })*/
           }).finally(()=>{
             let {photoURL, displayName, email} = user
             sessionStorage.setItem('uid', user.uid)

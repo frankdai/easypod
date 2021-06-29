@@ -3,7 +3,7 @@ import style from '../theme/dashboard/index.module.css'
 
 const map = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-export default function DashboardItem({channel, user}) {
+export default function DashboardItem({channel, user, onClickItem}) {
   let {meta, episodes} = channel
   let episode = episodes[0] || {}
   let [lastUpdateDate, setLastUpdateTime] = useState('')
@@ -20,7 +20,11 @@ export default function DashboardItem({channel, user}) {
       setLastUpdateTime(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
     }
   }, [episode])
-  return <div className="flex px-6 py-4 border-b-2 border-gray-400">
+  function onClick (event) {
+    onClickItem && onClickItem(channel)
+    event.stopPropagation()
+  }
+  return <div className="flex px-6 py-4 border-b-2 border-gray-400" onClick={onClick}>
     <div className={style.left}>
       <img src={meta.imageURL} alt={meta.title} width={300}/>
     </div>

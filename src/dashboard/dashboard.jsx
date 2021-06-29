@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Header from "./header";
 import DashboardItem from "./item";
+import { useHistory } from 'react-router-dom';
 
-export default function ({user}) {
+
+export default function Show({user, onSetCurrentShow}) {
   let [currentUserChannels, setCurrentUserChannels] = useState([])
   let [allChannels, setAllChannels] = useState(null)
+  const history = useHistory()
   useEffect(()=>{
     let database = firebase.database().ref(`/users/${sessionStorage.getItem('uid')}`);
     database.get().catch((error)=>{
@@ -30,7 +33,10 @@ export default function ({user}) {
       array = currentUserChannels
     }
     return array.map((id)=>{
-      return allChannels[id]
+      return {
+        id,
+        ...allChannels[id]
+      }
     })
   }, [currentUserChannels, allChannels])
   function addPodcastToUsr (key) {
@@ -59,8 +65,11 @@ export default function ({user}) {
   }
   return <div>
     <Header user={user} addUrl={addUrl} />
-    {userChannels.map((channel, index)=>{
-      return <DashboardItem channel={channel} key={index} user={user}/>
+    {userChannels.map((channel)=>{
+      return <DashboardItem channel={channel} key={channel.id} user={user} onClickItem={(show)=>{
+        onSetCurrentShow && onSetCurrentShow(show, userChannels)
+        history.push('show', '')
+      }} />
     })}
   </div>
 }
