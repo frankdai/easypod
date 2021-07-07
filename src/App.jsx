@@ -9,7 +9,7 @@ import './theme/common/button.css'
 import './theme/icomoon/style.css'
 
 export default  () => {
-  let [currentUser, setCurrentUser] = useState('Frank')
+  let [currentUser, setCurrentUser] = useState(null)
   let [currentShow, setCurrentShow] = useState(null)
   let [channels, setChannels] = useState([])
   const requireLogin = (to, from, next) => {
